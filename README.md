@@ -13,12 +13,12 @@
 	user bitcoin
 	env.binary bitcoin-cli
 	env.conf_dir /home/bitcoin/.bitcoin
-	env.data_dir /mnt/data/bitcoin
+	env.data_dir /mnt/data/blockchain
 
     ```
 
     This will tell Munin to run `bitcoin-cli` as the `bitcoin` user. Adapt it to your setup and avoid using `root`.
-	`conf_dir` is the path to bitcoin.conf folder, `data_dir` is path to a possibly different blockchain data dir.
+	`conf_dir` is the path to *bitcoin.conf* folder, `data_dir` is path to a possibly different blockchain data dir.
 
 1. Restart the *munin-node* daemon with `systemctl restart munin-node` or `/etc/init.d/munin-node restart`.
 
