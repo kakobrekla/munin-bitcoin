@@ -13,7 +13,8 @@ bitcoind_mempool - Plugin to monitor the size of the mempool
  [bitcoind*]
     user bitcoin
     env.binary bitcoin-cli
-    env.data_dir /var/lib/bitcoin
+    env.data_dir /mnt/data/bitcoin
+    env.conf_dir /home/bitcoin/.bitcoin
 
 =head1 AUTHOR
 
@@ -37,7 +38,7 @@ case $METRIC in
 esac
 
 BINARY=${binary:-"/usr/bin/bitcoin-cli"}
-DATA_DIR=${data_dir:-"/var/lib/bitcoin"}
+CONF_DIR=${conf_dir:-"/var/lib/bitcoin"}
 
 if [ "$1" = "autoconf" ]; then
     autoconf="yes"
@@ -56,7 +57,7 @@ if [ "$1" = "config" ]; then
     exit 0
 fi
 
-mempool="$($BINARY -datadir=$DATA_DIR getmempoolinfo)"
+mempool="$($BINARY -datadir=$CONF_DIR getmempoolinfo)"
 value=$(echo "$mempool" | grep $METRIC | grep -o '[0-9]*')
 
 echo "${METRIC}.value $(echo $value)"

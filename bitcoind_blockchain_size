@@ -12,7 +12,9 @@ bitcoind_blockchain_size - Plugin to monitor the size of the blockchain
 
  [bitcoind*]
     user bitcoin
-    env.data_dir /var/lib/bitcoin
+    env.binary bitcoin-cli
+    env.data_dir /mnt/data/bitcoin
+    env.conf_dir /home/bitcoin/.bitcoin
 
 =head1 AUTHOR
 

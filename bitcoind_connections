@@ -13,7 +13,8 @@ bitcoind_connections - Plugin to monitor the number of open connections
  [bitcoind*]
     user bitcoin
     env.binary bitcoin-cli
-    env.data_dir /var/lib/bitcoin
+    env.data_dir /mnt/data/bitcoin
+    env.conf_dir /home/bitcoin/.bitcoin
 
 =head1 AUTHOR
 
@@ -31,7 +32,7 @@ AGPLv3+
 =cut
 
 BINARY=${binary:-"/usr/bin/bitcoin-cli"}
-DATA_DIR=${data_dir:-"/var/lib/bitcoin"}
+CONF_DIR=${conf_dir:-"/var/lib/bitcoin"}
 
 if [ "$1" = "autoconf" ]; then
     autoconf="yes"
@@ -42,7 +43,7 @@ if [ "$1" = "autoconf" ]; then
     exit 0
 fi
 
-peers=$($BINARY -datadir=$DATA_DIR getpeerinfo | grep addrlocal | awk -F '"' '{print $4}' | grep ':8333$' | sort | uniq -c | sed 's/:8333$//' | awk '{print $2 " " $1}')
+peers=$($BINARY -datadir=$CONF_DIR getpeerinfo | grep addrlocal | awk -F '"' '{print $4}' | grep ':8333$' | sort | uniq -c | sed 's/:8333$//' | awk '{print $2 " " $1}')
 
 if [ "$1" = "config" ]; then
     echo 'graph_title Connection count'
@@ -59,8 +60,8 @@ if [ "$1" = "config" ]; then
     exit 0
 fi
 
-echo "total.value $($BINARY -datadir=$DATA_DIR getconnectioncount)"
-echo "outbound.value $($BINARY -datadir=$DATA_DIR getpeerinfo | grep -c '"inbound": false')"
+echo "total.value $($BINARY -datadir=$CONF_DIR getconnectioncount)"
+echo "outbound.value $($BINARY -datadir=$CONF_DIR getpeerinfo | grep -c '"inbound": false')"
 
 odd=0
 for address_or_count in $peers; do
