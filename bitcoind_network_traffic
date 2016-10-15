@@ -48,10 +48,16 @@ if [ "$1" = "config" ]; then
     echo 'graph_vlabel bytes'
     echo 'graph_category bitcoind'
     echo 'graph_info This graph shows the sum of incoming and outgoing traffic.'
-    echo 'bitcoind_network_traffic.label network traffic'
-    echo 'bitcoind_network_traffic.info The network traffic.'
+    echo 'bitcoind_network_traffic_in.label Net traffic in'
+    echo 'bitcoind_network_traffic_in.info Incoming network traffic.'
+    echo 'bitcoind_network_traffic_out.label Net traffic out'
+    echo 'bitcoind_network_traffic_out.info Outgoing network traffic.'
+    echo 'bitcoind_network_traffic_total.label Net traffic total'
+    echo 'bitcoind_network_traffic_total.info Total network traffic.'
     exit 0
 fi
 
-echo "bitcoind_network_traffic.value $($BINARY -datadir=$CONF_DIR getnettotals | grep totalbytes | grep -o '[0-9]*' | sed "N;s/\n/+/" | bc)"
-
+STATS="$($BINARY -datadir=$CONF_DIR getnettotals)"
+echo "bitcoind_network_traffic_in.value $(echo "$STATS" | grep totalbytesrecv | grep -o '[0-9]*')"
+echo "bitcoind_network_traffic_out.value $(echo "$STATS" | grep totalbytessent | grep -o '[0-9]*')"
+echo "bitcoind_network_traffic_total.value $(echo "$STATS" | grep totalbytes | grep -o '[0-9]*' | sed "N;s/\n/+/" | bc)"
